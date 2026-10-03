@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ตารางเตะบอล 4 ทีม</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pitch:#1f6b3a; --pitch-dark:#174f2b; --chalk:#f3f7f1;
+  --bg:#e9efe8; --surface:#ffffff; --ink:#18241b; --muted:#5d6b60; --line:#cfd9cf;
+  --next:#fff4c2;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --pitch:#1b5c32; --pitch-dark:#123f22; --bg:#121813; --surface:#1b231d; --ink:#e6eee6;
+    --muted:#9aa89c; --line:#2e3a30; --next:#3a3418;
+  }
+}
+:root[data-theme="dark"]{
+  --pitch:#1b5c32; --pitch-dark:#123f22; --bg:#121813; --surface:#1b231d; --ink:#e6eee6;
+  --muted:#9aa89c; --line:#2e3a30; --next:#3a3418;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Bai Jamjuree","Noto Sans Thai","Leelawadee UI","Tahoma",system-ui,sans-serif;
+  font-size:16px;line-height:1.5}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid #ffb300;outline-offset:2px}
+
+/* Header: the pitch */
+header{background:var(--pitch);color:var(--chalk);position:relative;overflow:hidden;
+  padding:28px 20px 30px}
+header::before{content:"";position:absolute;inset:12px;border:2px solid rgba(243,247,241,.35);border-radius:4px;pointer-events:none}
+header::after{content:"";position:absolute;width:140px;height:140px;border:2px solid rgba(243,247,241,.35);
+  border-radius:50%;right:-40px;top:50%;transform:translateY(-50%);pointer-events:none}
+.wrap{max-width:760px;margin:0 auto;position:relative}
+h1{margin:0;font-size:clamp(1.7rem,6vw,2.4rem);line-height:1.15;font-weight:700}
+.sub{margin:6px 0 0;opacity:.85}
+
+main{max-width:760px;margin:0 auto;padding:18px 14px 40px}
+section{margin-top:22px}
+h2{font-size:1.15rem;margin:0 0 10px;font-weight:600}
+
+/* Bibs */
+.bib{display:inline-flex;align-items:center;justify-content:center;min-width:78px;padding:4px 10px;
+  border-radius:6px;font-weight:600;font-size:.92rem;border:2px solid transparent;white-space:nowrap}
+.teams{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.team-pick{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 8px;text-align:center}
+.team-pick .slot{color:var(--muted);font-size:.85rem}
+.team-pick select{width:100%;margin-top:6px;padding:6px;border-radius:6px;border:1px solid var(--line);background:var(--bg)}
+
+/* Standings: the bold bit */
+.standings{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stand{border-radius:12px;padding:12px 8px 10px;text-align:center;position:relative;border:2px solid transparent}
+.stand .rank{position:absolute;top:6px;left:9px;font-size:.8rem;opacity:.75}
+.stand .pts{font-size:2.6rem;font-weight:700;line-height:1}
+.stand .lbl{font-size:.8rem;opacity:.8}
+.stand .name{font-weight:600;margin-bottom:4px}
+.stand .rec{font-size:.78rem;opacity:.85;margin-top:4px}
+
+/* Fixtures */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.fx{display:grid;grid-template-columns:34px 1fr auto 1fr 40px;align-items:center;gap:8px;
+  padding:9px 10px;border-top:1px solid var(--line)}
+.fx:first-child{border-top:0}
+.fx.next{background:var(--next)}
+.fx .no{font-weight:600;color:var(--muted);text-align:center}
+.fx .t1{justify-self:end} .fx .t2{justify-self:start}
+.score{display:flex;align-items:center;gap:4px}
+.score input{width:44px;height:40px;text-align:center;font-size:1.1rem;font-weight:600;
+  border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.score input::-webkit-inner-spin-button{display:none}
+.score input{-moz-appearance:textfield;appearance:textfield}
+.fx .st{text-align:center;font-size:.8rem;color:var(--muted)}
+.fx .st.done{color:var(--pitch);font-size:1.1rem;font-weight:700}
+.fx .st.nxt{color:#a06a00;font-weight:600}
+.rule{padding:12px 14px;background:var(--bg);border-top:1px dashed var(--muted);border-bottom:1px dashed var(--muted);
+  font-size:.92rem;color:var(--muted)}
+
+/* Head-to-head */
+.h2h{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.h2h div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;
+  display:flex;align-items:center;gap:6px;font-size:.9rem}
+.h2h .n{margin-left:auto;font-weight:700;font-size:1.05rem}
+.h2h .bib{min-width:0;padding:2px 8px;font-size:.82rem}
+.note{color:var(--muted);font-size:.85rem;margin:8px 2px 0}
+
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}
+.btn{padding:9px 16px;border-radius:8px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
+.btn.danger{border-color:#c62828;color:#c62828}
+
+details{margin-top:26px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+summary{cursor:pointer;font-weight:600}
+.tbl-wrap{overflow-x:auto;margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:420px}
+th,td{border:1px solid var(--line);padding:5px 8px;text-align:center}
+th{background:var(--bg);font-weight:600}
+
+@media (max-width:560px){
+  .teams,.standings{grid-template-columns:repeat(2,1fr)}
+  .fx{grid-template-columns:26px 1fr auto 1fr 26px;gap:5px;padding:9px 6px}
+  .bib{min-width:62px;padding:4px 6px;font-size:.84rem}
+  .score input{width:38px;height:38px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .stand{transition:transform .25s ease}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>ตารางเตะบอล 4 ทีม</h1>
+    <p class="sub">เตะนัดละ 8 นาที · ชนะ 3 เสมอ 1 แพ้ 0</p>
+  </div>
+</header>
+
+<main>
+  <section>
+    <h2>สีเสื้อแต่ละทีม</h2>
+    <div class="teams" id="teams"></div>
+  </section>
+
+  <section>
+    <h2>คะแนนรวม</h2>
+    <div class="standings" id="standings"></div>
+  </section>
+
+  <section>
+    <h2>ตารางแข่ง</h2>
+    <div class="card" id="fixtures"></div>
+  </section>
+
+  <section>
+    <h2>จำนวนนัดที่เจอกัน</h2>
+    <div class="h2h" id="h2h"></div>
+    <p class="note">นับนัดที่ 1–14 (ไม่รวมนัดสำรอง 15–16)</p>
+  </section>
+
+  <div class="actions">
+    <button class="btn danger" id="reset">ล้างสกอร์ทั้งหมด</button>
+  </div>
+
+  <details>
+    <summary>ผลรอบก่อน (จากชีต backup)</summary>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>นัดที่</th><th>สกอร์</th><th>ผลต่าง</th><th>ขาว</th><th>แดง</th><th>เหลือง</th><th>น้ำเงิน</th></tr></thead>
+        <tbody id="backup"></tbody>
+      </table>
+    </div>
+  </details>
+</main>
+
+<script>
+(function(){
+  var COLORS = {
+    White:{th:"ขาว",bg:"#ffffff",fg:"#1a1a1a",bd:"#9aa59b"},
+    Red:{th:"แดง",bg:"#e53935",fg:"#ffffff"},
+    Yellow:{th:"เหลือง",bg:"#ffd600",fg:"#1a1a1a"},
+    Blue:{th:"น้ำเงิน",bg:"#1e5fd6",fg:"#ffffff"},
+    Black:{th:"ดำ",bg:"#1a1a1a",fg:"#ffffff",bd:"#666"},
+    Green:{th:"เขียว",bg:"#43a047",fg:"#ffffff"},
+    Purple:{th:"ม่วง",bg:"#8e44ad",fg:"#ffffff"},
+    Orange:{th:"ส้ม",bg:"#fb8c00",fg:"#1a1a1a"}
+  };
+  var SLOTS = ["A","B","C","D"];
+  // Fixtures from the sheet (by team slot); 15–16 are the optional extra matches
+  var FIX = [[0,1],[2,3],[0,3],[2,1],[0,2],[1,3],[0,1],[2,3],[0,3],[2,1],[0,2],[1,3],[0,1],[2,3],[0,3],[2,1]];
+  var BACKUP = [[1,"0-2",-2,0,3,"",""],[2,"1-1",0,"","",1,1],[3,"2-1",1,3,"","",0],[4,"0-0",0,"",1,1,""],
+    [5,"0-1",-1,0,"",3,""],[6,"0-2",-2,"",0,"",3],[7,"1-0",1,3,0,"",""],[8,"0-1",-1,"","",0,3],
+    [9,"1-2",-1,0,"","",3],[10,"2-1",1,"",0,3,""],[11,"0-5",-5,0,"",3,""],[12,"1-4",-3,"",0,"",3],
+    [13,"0-2",-2,0,3,"",""],[14,"1-1",0,"","",1,1],["รวม","","",6,7,12,14]];
+
+  var KEY = "football_table_v1";
+  var state = {teams:["White","Red","Yellow","Blue"], scores:FIX.map(function(){return ["",""];})};
+  try{ var s = JSON.parse(localStorage.getItem(KEY)); if(s && s.teams && s.scores) state = s; }catch(e){}
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+  function bib(slot, extra){
+    var c = COLORS[state.teams[slot]];
+    var st = "background:"+c.bg+";color:"+c.fg+";border-color:"+(c.bd||c.bg);
+    return '<span class="bib'+(extra?" "+extra:"")+'" style="'+st+'">'+c.th+'</span>';
+  }
+  function played(i){ var s=state.scores[i]; return s[0]!=="" && s[1]!==""; }
+
+  function renderTeams(){
+    var el = document.getElementById("teams"); el.innerHTML = "";
+    SLOTS.forEach(function(sl,i){
+      var opts = Object.keys(COLORS).map(function(k){
+        return '<option value="'+k+'"'+(state.teams[i]===k?" selected":"")+'>'+COLORS[k].th+' ('+k+')</option>';
+      }).join("");
+      var d = document.createElement("div"); d.className="team-pick";
+      d.innerHTML = '<div class="slot">ทีม '+sl+'</div>'+bib(i)+
+        '<select aria-label="สีทีม '+sl+'" data-i="'+i+'">'+opts+'</select>';
+      el.appendChild(d);
+    });
+    el.querySelectorAll("select").forEach(function(s){
+      s.addEventListener("change",function(){ state.teams[+s.dataset.i]=s.value; save(); renderAll(); });
+    });
+  }
+
+  function renderFixtures(){
+    var el = document.getElementById("fixtures"); el.innerHTML = "";
+    var nextIdx = -1;
+    for(var k=0;k<14;k++){ if(!played(k)){ nextIdx=k; break; } }
+    FIX.forEach(function(f,i){
+      if(i===14){
+        var r=document.createElement("div"); r.className="rule";
+        r.textContent="ถ้าเวลาเหลือมากกว่า 16 นาที ให้เตะนัด 15, 16 · ถ้าเวลาเหลือพอเตะแค่ 1 นัด ให้เป่ายิ้งฉุบสุ่ม 2 ทีมมาเตะ";
+        el.appendChild(r);
+      }
+      var row=document.createElement("div");
+      row.className="fx"+(i===nextIdx?" next":"");
+      var st = played(i) ? '<div class="st done" title="เตะแล้ว">✓</div>'
+             : (i===nextIdx ? '<div class="st nxt">ต่อไป</div>' : '<div class="st"></div>');
+      row.innerHTML='<div class="no">'+(i+1)+'</div>'+
+        '<div class="t1">'+bib(f[0])+'</div>'+
+        '<div class="score"><input inputmode="numeric" maxlength="2" aria-label="ประตูนัด '+(i+1)+' ทีมแรก" data-i="'+i+'" data-s="0" value="'+state.scores[i][0]+'">'+
+        '<span>–</span><input inputmode="numeric" maxlength="2" aria-label="ประตูนัด '+(i+1)+' ทีมที่สอง" data-i="'+i+'" data-s="1" value="'+state.scores[i][1]+'"></div>'+
+        '<div class="t2">'+bib(f[1])+'</div>'+st;
+      el.appendChild(row);
+    });
+    el.querySelectorAll("input").forEach(function(inp){
+      inp.addEventListener("input",function(){
+        inp.value = inp.value.replace(/\D/g,"");
+        state.scores[+inp.dataset.i][+inp.dataset.s] = inp.value; save();
+        renderStandings();
+      });
+      inp.addEventListener("change",function(){ renderFixtures(); });
+    });
+  }
+
+  function renderStandings(){
+    var t = SLOTS.map(function(_,i){ return {i:i,pts:0,p:0,w:0,d:0,l:0,gd:0}; });
+    FIX.forEach(function(f,i){
+      if(!played(i)) return;
+      var a=+state.scores[i][0], b=+state.scores[i][1], A=t[f[0]], B=t[f[1]];
+      A.p++; B.p++; A.gd+=a-b; B.gd+=b-a;
+      if(a>b){A.pts+=3;A.w++;B.l++;} else if(a<b){B.pts+=3;B.w++;A.l++;} else {A.pts++;B.pts++;A.d++;B.d++;}
+    });
+    var sorted = t.slice().sort(function(x,y){ return y.pts-x.pts || y.gd-x.gd || x.i-y.i; });
+    var el=document.getElementById("standings"); el.innerHTML="";
+    sorted.forEach(function(r,n){
+      var c=COLORS[state.teams[r.i]];
+      var d=document.createElement("div"); d.className="stand";
+      d.style.background=c.bg; d.style.color=c.fg; d.style.borderColor=c.bd||c.bg;
+      d.innerHTML='<span class="rank">#'+(n+1)+'</span><div class="name">'+c.th+'</div>'+
+        '<div class="pts">'+r.pts+'</div><div class="lbl">คะแนน</div>'+
+        '<div class="rec">เตะ '+r.p+' · ชนะ '+r.w+' เสมอ '+r.d+' แพ้ '+r.l+' · ได้เสีย '+(r.gd>0?"+":"")+r.gd+'</div>';
+      el.appendChild(d);
+    });
+  }
+
+  function renderH2H(){
+    var counts={};
+    FIX.slice(0,14).forEach(function(f){ var k=Math.min(f[0],f[1])+"-"+Math.max(f[0],f[1]); counts[k]=(counts[k]||0)+1; });
+    var el=document.getElementById("h2h"); el.innerHTML="";
+    Object.keys(counts).sort().forEach(function(k){
+      var p=k.split("-").map(Number);
+      var d=document.createElement("div");
+      d.innerHTML=bib(p[0])+'<span>vs</span>'+bib(p[1])+'<span class="n">'+counts[k]+' นัด</span>';
+      el.appendChild(d);
+    });
+  }
+
+  function renderBackup(){
+    document.getElementById("backup").innerHTML = BACKUP.map(function(r){
+      return "<tr>"+r.map(function(v,j){ return (r[0]==="รวม"?"<th>":"<td>")+v+(r[0]==="รวม"?"</th>":"</td>"); }).join("")+"</tr>";
+    }).join("");
+  }
+
+  function renderAll(){ renderTeams(); renderStandings(); renderFixtures(); renderH2H(); }
+
+  document.getElementById("reset").addEventListener("click",function(){
+    if(!confirm("ล้างสกอร์ทั้งหมด?")) return;
+    state.scores = FIX.map(function(){return ["",""];}); save(); renderAll();
+  });
+
+  renderAll(); renderBackup();
+})();
+</script>
+</body>
+</html>
