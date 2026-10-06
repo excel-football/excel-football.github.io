@@ -202,8 +202,10 @@ h2{font-size:1.15rem;margin:0 0 10px;font-weight:600}
     else if(k[0]==="t") o.teams[+k.slice(1)] = v;
     else { var p=k.slice(1).split("."); o.scores[+p[0]][+p[1]] = v; }
   }
-  function apiGet(){
-    return fetch(API + "?name=" + encodeURIComponent(DB_NAME), {cache:"no-store"}).then(function(r){ return r.json(); });
+  // `key` reads only that top-level property of the online value
+  function apiGet(key){
+    var url = API + "?name=" + encodeURIComponent(DB_NAME) + (key ? "&key=" + encodeURIComponent(key) : "");
+    return fetch(url, {cache:"no-store"}).then(function(r){ return r.json(); });
   }
   function push(){
     if(pushing){ pushTimer = setTimeout(push, PUSH_DELAY_MS); return; }
@@ -230,8 +232,16 @@ h2{font-size:1.15rem;margin:0 0 10px;font-weight:600}
     var a = document.activeElement;
     return !!a && a.tagName==="INPUT" && document.getElementById("fixtures").contains(a);
   }
+  // Polls read only `rev`; the full value is fetched when it differs (or isn't readable)
   function pull(){
     if(dirty){ if(!pushing) push(); return; }
+    apiGet("rev").then(function(resp){
+      if(dirty) return;
+      if(resp.success && resp.data===state.rev){ setSync("ok","ซิงก์ออนไลน์แล้ว"); return; }
+      pullFull();
+    }).catch(function(){ setSync("err","ออฟไลน์ · กำลังลองใหม่"); });
+  }
+  function pullFull(){
     apiGet().then(function(resp){
       if(dirty) return;
       if(!resp.success || !valid(resp.data)){
