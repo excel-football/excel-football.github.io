@@ -10,7 +10,7 @@ There is no build, no dependencies, no tests and no linter. To develop, open `do
 
 ## Architecture
 
-`docs/index.html` holds everything in one file: inline CSS, an inline vanilla-JS IIFE (ES5 style: `var` and `function`, no modules), and Google Fonts (Bai Jamjuree) as the only external resource.
+`docs/index.html` holds everything in one file: inline CSS, an inline vanilla-JS IIFE (ES5 style: `var` and `function`, no modules), and Google Fonts (Bai Jamjuree) as the only external resource. The favicons (`favicon-32.png`, `favicon-192.png`, `apple-touch-icon.png`) sit next to it in `docs/`, resized from the crest image.
 
 - **Team slots and colors:** the logic only works with slots A–D (indices 0–3). `state.teams[slot]` maps each slot to a key in `COLORS` (English key → Thai label plus bib colors). The schedule never mentions colors.
 - **`FIX`:** the fixed 16-match schedule as `[slotIndex, slotIndex]` pairs, copied from Sheet1. Matches 1–14 are the main schedule. Matches 15–16 are optional extras, played only if time allows. Code depends on index 14 as that boundary: the rule banner is inserted there, the fallback "next match" search covers 0–13, and the head-to-head counts use `FIX.slice(0,14)`.
